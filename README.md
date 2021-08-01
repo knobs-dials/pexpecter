@@ -1,23 +1,13 @@
 (currently rewriting for more general use, hang on)
 
-
 # pexpecter
 
 Wraps a rule system around python's pexpect module,
 which is mostly an ordered list of `("if you see this", "then say/do this")` pairs.
 
+This is shorter to write, yet not much more functional, than what you'd do handing a list to expect() (...which you typically want to do when you want to deal with extra/missing that are conditional on config/environment/varying versions, reordered questions, and such).
 
-It lets tou deal with things like extra/missing that are conditional on config 
-or varying versions (e.g. MPI, PBS) reordered questions, and such.
-
-And yes, is mostly just a slightly simpler to use variant of handing a list to expect(),
-and aims to wrap some common boilerplate-ish code too.
-
-
-This was written for a few different pieces of software that either only work in a question-answer style,
-and choose to expose beta features in question mode but not in parameters.
-
-If you need something more complex than this, chances are you should be building a state machine instead.
+If you need something more complex than this, chances are you want to skip this and build a state machine instead.
 
 
 ## Examples
@@ -162,14 +152,14 @@ The rule_list argument on interact_rules is a set of tuples.
 
 
 ## TODO:
-
 - test the "remove rule" thing.
   I've rarely used this construction, so I'm not 100% on whether it still works as expected.
   The idea was that if everything should be answered once, rules can remove themselves to avoid accidentally matching something later.
 
 - special-cased exit for "nothing matches"?
 
-- allow matching on stderr output. This seems to have a good idea: https://stackoverflow.com/questions/27179383/extracting-stderr-from-pexpect
+- I also intend to wrap some common boilerplate-ish code, e.g.
+  - our own spawn wrapper, so that we can e.g. allow matching on stderr output.  This seems to have a good idea: https://stackoverflow.com/questions/27179383/extracting-stderr-from-pexpect
 
 - read up on more peculiarities, like 
   https://helpful.knobs-dials.com/index.php/Pexpect#pexpect
