@@ -1,0 +1,134 @@
+#!/usr/bin/python2
+
+import os
+import pexpect
+import time
+
+import helpers_pexpect
+
+def fn_parts(pathstr):
+    """ For a given path, returns a dict with     dirname, basename, basename without extension, extension
+        for extensions, we split only on the last dot.
+ 
+        For example: 
+'/q/a.b/base.xml' --> {'ext': 'xml',  'base': 'base.xml',  'noext': 'base',  'dir': '/q/a.b',  fullpathnoext: '/q/a.b/base'}
+           'aa.b' --> {'ext': 'b',    'base': 'aa.b',      'noext': 'aa',    'dir': '',        fullpathnoext: 'aa'}
+           'bare' --> {'ext': None,   'base': 'bare',      'noext': 'bare',  'dir': '',        fullpathnoext: 'bare'}
+         Note that 'ext':None, not ''
+    """
+    dirn   = os.path.dirname(pathstr)
+    basen  = os.path.basename(pathstr)
+    dotinbase = basen.rfind('.')
+    if dotinbase==-1:
+        noext=basen
+        ext=None
+    else:
+        noext = basen[:dotinbase]
+        ext   = basen[dotinbase+1:]
+    return {'dir':dirn, 'base':basen , 'noext':noext , 'ext':ext, 'fullpathnoext':os.path.join(dirn,noext) }
+
+
+
+def ctffind4(inputmrc,
+             pixelsize_A,
+             acc_kV=300.0,
+             sphericalaberration=2.7,
+             amplitudecontrast_frac=0.07,
+             spectrumsize_pixels=512,
+             minres_A=25,
+             maxres_A=4,
+             mindef_A=2000,
+             maxdef_A=50000,
+             defstep_A=350.,
+             astigpenaltyover_A=2000,
+             phaseshift_yesno='no',
+             phaseshift_minrad=0,
+             phaseshift_maxrad=3.15,
+             phaseshift_steprad=0.1,
+
+             debug=0,
+             wait_and_close=True,
+             wait_timeout_sec=300,
+
+             targetdir=None,
+             ):
+    ''' Wraps Gregorieff Lab's ctffind4 question mode in a function.
+        Most of this function's default values are ctffind4's own defaults (as of this writing)
+
+        Returns the diagnostic MRC filename.  It will also have output a .txt and _avrot.txt alongside.
+    '''
+
+    fp = fn_parts( inputmrc )
+    if targetdir:
+        diagbase = os.path.join( targetdir, fp['noext'])+'_diag.mrc'
+    else:
+        diagbase = fp['fullpathnoext']+'_diag.mrc' 
+
+    rules=[
+        ['Input image file name[^:]*:',                 inputmrc ],
+
+        ['Output diagnostic filename[^:]*:',            diagbase  ],
+        ['Output diagnostic image file name[^:]*:',     diagbase  ], # v4.1
+
+        ['Pixel size[\s0-9.,\x1b\[\]m]+:',            '%f'%pixelsize_A],  # written that way to not match the "Pixel size for fitting" in the pre-calculation or post-calculation summary
+        ['Acceleration voltage[^:]*:',                  '%.1f'%acc_kV],
+        ['Spherical aberration[^:]*:',                  '%f'%sphericalaberration],
+        ['Amplitude contrast[^:]*:',                    '%f'%amplitudecontrast_frac],
+
+        ['Size of power spectrum to compute[^:]*:',     '%d'%spectrumsize_pixels], # CONSIDER: ensure twopower?
+        ['Size of amplitude spectrum to compute[^:]*:', '%d'%spectrumsize_pixels], # v4.1
+
+        ['Minimum resolution[^:]*:',                    '%f'%minres_A],
+        ['Maximum resolution[^:]*:',                    '%f'%maxres_A],
+        ['Minimum defocus[^:]*:',                       '%f'%mindef_A],
+        ['Maximum defocus[^:]*:',                       '%f'%maxdef_A],
+        ['Defocus search step[^:]*:',                   '%d'%defstep_A],
+
+        ['Do you know what astigmatism is present[^:]*:', 'no'],  # v4.1
+        ['Do you expect very large astigmatism[^:]*:',    'yes'], # v4.1. apparently >1000A is considered very large.
+        ['Use a restraint on astigmatism?[^:]*:',         'yes'], # v4.1. Penalise above given value
+
+        ['Expected \(tolerated\) astigmatism[^:]*:',   '%f'%astigpenaltyover_A], # v4.1
+
+        ['Do you want to set expert options[^:]*:',   'no'], # v4.1. HAven't checked which they are yet
+
+        ['Find additional phase shift[^:]*:',        phaseshift_yesno],
+        # only get asked if you answer yes to phase shift:
+        ['Minimum phase shift[^:]*:',        '%.2f'%phaseshift_minrad],
+        ['Maximum phase shift[^:]*:',        '%.2f'%phaseshift_maxrad],
+        ['Phase shift search step[^:]*:',    '%f'%phaseshift_steprad],
+
+        ['more exhaustive search',           'no'],
+
+        #['Summary information',              None], # it's starting -- give back control
+    ]
+
+    proc = pexpect.spawn('./ctffind')
+    start = time.time()
+
+    retval = helpers_pexpect.interact_rules( proc, rules, debug=debug )
+    print( 'retval: %s'%retval )
+
+    if wait_and_close:
+        weclosed = False
+        while time.time() < start + wait_timeout_sec:
+            time.sleep(0.05)
+            if not proc.isalive():
+                print( "ctffind execution done after approx %.3f seconds"%(time.time()-start) )
+                proc.close()
+                weclosed = True
+                break
+            if debug >= 1:
+                print("...waiting for process to finish..")
+            time.sleep(0.3)
+        if not weclosed: # i.e. we timed out waiting for it to finish
+            proc.close()
+
+    return diagbase
+
+if __name__ == '__main__':
+    import sys
+    #for fn in sys.argv[1:]:
+    #    ctffind4('test.mrc', 1.82, debug=1)
+    ctffind4('test.mrc', 0.91, debug=1)
+    ctffind4('smaller.mrc', 1.82, debug=1)
