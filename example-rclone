@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# as mentioned in README, you probably do NOT want to use this code
 import pexpect
 import helpers_pexpect
 
