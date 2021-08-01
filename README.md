@@ -29,9 +29,7 @@ Many examples you see out there are remote execution, but many cases are simple 
 
 ### rclone example
 
-```
-#!/usr/bin/python
-
+```python
 import pexpect
 import helpers_pexpect
 
