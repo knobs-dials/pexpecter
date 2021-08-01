@@ -88,22 +88,22 @@ def ctffind4(inputmrc,
         ['Do you expect very large astigmatism[^:]*:',    'yes'], # v4.1. apparently >1000A is considered very large.
         ['Use a restraint on astigmatism?[^:]*:',         'yes'], # v4.1. Penalise above given value
 
-        ['Expected \(tolerated\) astigmatism[^:]*:',   '%f'%astigpenaltyover_A], # v4.1
+        ['Expected \(tolerated\) astigmatism[^:]*:',      '%f'%astigpenaltyover_A], # v4.1
 
-        ['Do you want to set expert options[^:]*:',   'no'], # v4.1. HAven't checked which they are yet
+        ['Do you want to set expert options[^:]*:',       'no'], # v4.1. HAven't checked which they are yet
 
-        ['Find additional phase shift[^:]*:',        phaseshift_yesno],
+        ['Find additional phase shift[^:]*:',             phaseshift_yesno],
         # only get asked if you answer yes to phase shift:
-        ['Minimum phase shift[^:]*:',        '%.2f'%phaseshift_minrad],
-        ['Maximum phase shift[^:]*:',        '%.2f'%phaseshift_maxrad],
-        ['Phase shift search step[^:]*:',    '%f'%phaseshift_steprad],
+        ['Minimum phase shift[^:]*:',                     '%.2f'%phaseshift_minrad],
+        ['Maximum phase shift[^:]*:',                     '%.2f'%phaseshift_maxrad],
+        ['Phase shift search step[^:]*:',                 '%f'%phaseshift_steprad],
 
-        ['more exhaustive search',           'no'],
+        ['more exhaustive search',                        'no'],
 
-        #['Summary information',              None], # it's starting -- give back control
+        ['Summary information',                           None], # it's starting -- give back control
     ]
 
-    proc = pexpect.spawn('./ctffind')
+    proc = pexpect.spawn('ctffind') # assumes it's in path
     start = time.time()
 
     retval = helpers_pexpect.interact_rules( proc, rules, debug=debug )
@@ -127,8 +127,62 @@ def ctffind4(inputmrc,
     return diagbase
 
 if __name__ == '__main__':
-    import sys
-    #for fn in sys.argv[1:]:
-    #    ctffind4('test.mrc', 1.82, debug=1)
     ctffind4('test.mrc', 0.91, debug=1)
-    ctffind4('smaller.mrc', 1.82, debug=1)
+    ''' With debug=1 the output looks something like
+
+        **   Welcome to Ctffind   **
+
+            Version : 4.1.5
+           Compiled : Sep  9 2016
+               Mode : Interactive
+
+Input image file name [smaller.mrc]                : test.mrc
+Output diagnostic image file name
+[smaller_diag.mrc]                                 : test_diag.mrc
+Pixel size [1.820000]                              : 0.910000
+Acceleration voltage [300.0]                       : 300.0
+Spherical aberration [2.700000]                    : 2.700000
+Amplitude contrast [0.070000]                      : 0.070000
+Size of amplitude spectrum to compute [512]        : 512
+Minimum resolution [25.000000]                     : 25.000000
+Maximum resolution [4.000000]                      : 4.000000
+Minimum defocus [2000.000000]                      : 2000.000000
+Maximum defocus [50000.000000]                     : 50000.000000
+Defocus search step [350]                          : 350
+Do you know what astigmatism is present? [no]      : no
+Slower, more exhaustive search? [no]               : no
+Use a restraint on astigmatism? [yes]              : yes
+Expected (tolerated) astigmatism [2000.000000]     : 2000.000000
+Find additional phase shift? [no]                  : no
+Do you want to set expert options? [no]            : no
+
+Summary information for file test.mrc
+Number of columns, rows, sections: 3838, 3710, 1
+MRC data mode: 2
+Bit depth: 32
+Pixel size: 1.000 1.000 1.000
+Bytes in symmetry header: 0
+
+Working on micrograph 1 of 1
+Estimated defocus values        : 7932.06 , 7481.13 Angstroms
+Estimated azimuth of astigmatism: -14.88 degrees
+Score                           : 0.03449
+Pixel size for fitting          : 1.401 Angstroms
+Thon rings with good fit up to  : 6.9 Angstroms
+Did not detect CTF aliasing
+
+Summary of results                          : test_diag.txt
+Diagnostic images                           : test_diag.mrc
+Detailed results, including 1D fit profiles : test_diag_avrot.txt
+Use this command to plot 1D fit profiles    : ctffind_plot_results.sh test_diag_avrot.txt
+
+
+retval: 0
+ctffind execution done after approx 7.271 seconds
+    '''
+
+    #import sys
+    #for fn in sys.argv[1:]:
+    #    ctffind4(fn, 1, debug=1) # too much work to copy in code to read pixel size for an example no one is going to run...
+    #ctffind4('smaller.mrc', 1.82, debug=1)
+
