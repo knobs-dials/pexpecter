@@ -20,7 +20,7 @@ and choose to expose beta features in question mode but not in parameters.
 If you need something more complex than this, chances are you should be building a state machine instead.
 
 
-## Rules
+## Rule format
 
 The rule_list argument on interact_rules is a set of tuples. 
 - The first part is a regex to match
@@ -41,7 +41,7 @@ The rule_list argument on interact_rules is a set of tuples.
       - ('del',   rulebymatch)          (often itself - see below)
 
 
-## Example
+## Examples
 
 It's actually somewhat hard to think of good examples.
 
@@ -49,20 +49,6 @@ Many examples you see out there are remote execution, but many cases are simple 
 
 
 ### rclone example
-
-The following "make an rclone config" example works, but is actually an example of when you probabluy do _not_ want this module.
-
-For starters, rclone offsers a parameter-based way to do it, which is more controlled and less fragile.
-
-Also, that list of rules is just the questions one by one in order, so doesn't do anything more than a series of expect()s and sendline()s.
-
-And if the questions do change a little, then the list-and-index variant of pexpect would do.
-
-The first and last rules demonstrates how you sometimes need to write rules based on trial and error:
-
-The first because the wording in the first summary you get, and its prompt, depends on whether there were remotes already defined or not.
-
-The last could probably be "y/e/d>", but I'd have to know nothing else asks that -- the string used here is probably more unique.
 
 ```
 #!/usr/bin/python
@@ -93,6 +79,22 @@ helpers_pexpect.interact_rules( proc, rules )
 # if we can assume there is a rule that means that function only returns once we're done, we can now just:
 proc.close()
 ```
+
+The above "make an rclone config" example works, but is actually an example of when you probabluy do _not_ want this module.
+
+For starters, rclone offsers a parameter-based way to do it, which is more controlled and less fragile.
+
+Also, that list of rules is just the questions one by one in order, so doesn't do anything more than a series of expect()s and sendline()s.
+
+And if the questions do change a little, then the list-and-index variant of pexpect would do.
+
+The first and last rules demonstrates how you sometimes need to write rules based on trial and error:
+
+The first because the wording in the first summary you get, and its prompt, depends on whether there were remotes already defined or not.
+
+The last could probably be "y/e/d>", but I'd have to know nothing else asks that -- the string used here is probably more unique.
+
+
 
 ### ctffind example
 
