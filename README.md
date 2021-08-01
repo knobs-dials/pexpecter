@@ -20,27 +20,6 @@ and choose to expose beta features in question mode but not in parameters.
 If you need something more complex than this, chances are you should be building a state machine instead.
 
 
-## Rule format
-
-The rule_list argument on interact_rules is a set of tuples. 
-- The first part is a regex to match
-- If the second is
-    - a string, it is sent as-is
-
-    - None,   please hand over control back to me" with retval -1
-        meant for "that was the question part done, now we wait for the process to do what it does"
-        If you don't, this function stays in control until it sees EOF.
-
-    - False,  please hand over control back to me with retval -2
-        meant for "that was an error message, let the overall return reflect that"
-
-    - a list/tuple: do multiple things. Each item can be 
-      - any of the above (probably most commonly a string), or
-      - ('print', what )
-      - ('sleep', howlong_sec)
-      - ('del',   rulebymatch)          (often itself - see below)
-
-
 ## Examples
 
 It's actually somewhat hard to think of good examples.
@@ -106,6 +85,28 @@ which means one est of rules works when you call that function various different
 
 That example also demonstrates a "hand back control early" rule, and how you might wait for it instead.
 Which this particular code doesn't really use that, but in general you might find uses for such non-blocking behaviour.
+
+
+
+## Rule format
+
+The rule_list argument on interact_rules is a set of tuples. 
+- The first part is a regex to match
+- If the second is
+    - a string, it is sent as-is
+
+    - None,   please hand over control back to me" with retval -1
+        meant for "that was the question part done, now we wait for the process to do what it does"
+        If you don't, this function stays in control until it sees EOF.
+
+    - False,  please hand over control back to me with retval -2
+        meant for "that was an error message, let the overall return reflect that"
+
+    - a list/tuple: do multiple things. Each item can be 
+      - any of the above (probably most commonly a string), or
+      - ('print', what )
+      - ('sleep', howlong_sec)
+      - ('del',   rulebymatch)          (often itself - see below)
 
 
 
