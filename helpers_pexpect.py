@@ -6,8 +6,6 @@ import sys
 import time
 import pexpect
 
-import helpers_shellcolor as sc
-
 def interact_command(pexpect_object, command, waitfor=None):
     """ Sends a command.
 
@@ -88,20 +86,16 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
         if debug >= 2:
             if debug >= 3:
                 if pexpect_object.match==pexpect.EOF:
-                        matchstr = 'EOF'
+                    matchstr = 'EOF'
                 else:
                     matchstr = pexpect_object.match.group()
-                print( "\nMATCH: '%s' / '%s' / '%s'"%(
-                    sc.darkgray( str(pexpect_object.before) ), 
-                    sc.gray(     matchstr ),
-                    sc.darkgray( str(pexpect_object.after) ),
-                ) )
+                print( "\nMATCH: '%s' / '%s' / '%s'"%( str(pexpect_object.before), matchstr, str(pexpect_object.after ) ) )
 
             if not hasattr( pexpect_object.match, 'group' ): # EOF and TIMETOUT are not regexp matches...
-                print( sc.brightyellow( ("\n  Matched response %r"%( pexpect_object.match ))) )
+                print( "\n  Matched response %r"%( pexpect_object.match ) )
             else:
-                print( sc.brightyellow( ("\n  Matched response text %r"%( pexpect_object.match.group() ))) )
-            print( sc.orange( "  with rule value %s"%( repr(rule_list[mi]) ) ) )
+                print( "\n  Matched response text %r"%( pexpect_object.match.group() ) )
+            print( "  with rule value %s"%( repr(rule_list[mi]) ) )
             
         if mi == EOF_index:
             if debug >= 2:
@@ -116,7 +110,7 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
 
             def respond(response):
                 if debug >= 3:
-                    print( sc.cyan("    Dealing with rule item %r"%(response,)) )
+                    print( "    Dealing with rule item %r"%(response,) )
 
                 if type(response) in (tuple,list): # reactions distinguished from string responses, including those with argumets
 
@@ -131,7 +125,7 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
                                 break
                         if delete_i!=None:
                             if debug >= 3:
-                                print( sc.brightcyan("    removing rule, index %s: %r"%(delete_i,rule_list[delete_i])) )
+                                print( "    removing rule, index %s: %r"%(delete_i,rule_list[delete_i]) )
                             rule_list.pop(delete_i)
                             list_patterns = list(e[0]  for e in rule_list)                            
                         return 0, rule_list
@@ -146,17 +140,17 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
                         return 0, rule_list
 
                     else:
-                        print( sc.red('  Do not know action %r, skipping...'%response[0]) )
+                        print( '  Do not know action %r, skipping...'%response[0] )
                         return 0, rule_list                    
 
                 elif response==None: #that's our "terminate rule processing now, we're okay" message.
                     if debug >=2:
-                        print( sc.yellow("  Rule used None, signaling that we're done") )
+                        print( "  Rule used None, signaling that we're done" )
                     #TODO: actually handle this case.
                     return -1, rule_list
                 
                 elif response==False: # our "terminate now, that was an error" message.
-                    print( "Underlying command reported a problem: %s"%sc.red( repr(pexpect_object.match.group()) ) )
+                    print( "Underlying command reported a problem: %r"%( pexpect_object.match.group() ) )
                     return -2, rule_list
 
                 else: # assumes it's the typical case, a string to send
@@ -169,15 +163,15 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
                 for r in response_val:                    
                     retval, rule_list = respond( r ) 
                     minresp = min( minresp, retval )
-                    #if debug >= 2:
-                    print( '    respond() exited with ',minresp )
+                    if debug >= 2:
+                        print( '    respond() exited with ',minresp )
                 if minresp <= -1: # break after the rule processing is done
                     retval = minresp
                     break
                 #print "  overall response:",minresp
                 if minresp <= -2 :
-                    #if debug >= 1:
-                    print( "Stopping1...  (%d)"%minresp )
+                    if debug >= 1:
+                        print( "Stopping1...  (%d)"%minresp )
                     retval = minresp
                     break
                     #return minresp
@@ -185,8 +179,8 @@ def interact_rules(pexpect_object, rule_list, timeout=None, debug=0 ):
             else: # single thing to do
                 retval, rule_list = respond(response_val)
                 if retval <= -2:
-                    #if debug>0:
-                    print( "Stopping2...  (%d)"%retval )
+                    if debug >= 1:
+                        print( "Stopping2...  (%d)"%retval )
                     return retval
     
     return minresp
