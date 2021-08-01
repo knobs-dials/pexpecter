@@ -1,10 +1,6 @@
 #!/usr/bin/python
 ''' Wraps pexpect with a rule system that makes my life simpler
     Written by Bart Alewijnse
-
-    You may care to read more on pexpect's behaviour, see e.g.
-      https://helpful.knobs-dials.com/index.php/Pexpect#pexpect
-      https://pexpect.readthedocs.io/en/stable/commonissues.html
 '''
 import sys
 import time

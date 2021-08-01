@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+import pexpect
+import helpers_pexpect
+
+rules = [
+    ["(No remotes|Current remotes:)",'n'],
+    ["name>",                        'myname'],
+    ["Storage>",                     'sftp'],
+    ["host>",                        'scarfboy.com'],
+    ["port>",                        '22'],
+    ["user>",                        'myuser'],
+    ['SSH password, leave',          'y'],
+    ['password:',                    'hackme'], # will also match the confirm. Would be more readable to 
+    ['key_file>',                    ''],
+    ['Only PEM encrypted key[^>]+>', 'n'],
+    ['key_use_agent>',               ''],
+    ['use_insecure_cipher>',         'true'],
+    ['disable_hashcheck>',           ''],
+    ['Edit advanced config[^>]+>',   'n'],
+    ['Yes this is OK',               ('y', ('sleep',0.1), None) ] # sleep is probably not necessary, but can't hurt.
+]
+
+proc = pexpect.spawn('rclone config')
+retval = helpers_pexpect.interact_rules( proc, rules, timeout=5, debug=1 )
+#print( 'retval: %s'%retval )
+# if we can assume there is a rule that means that function only returns once we're done, we need no more handling than:
+proc.close()
+
