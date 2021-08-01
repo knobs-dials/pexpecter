@@ -1,3 +1,6 @@
+(currently rewriting for more general use, hang on)
+
+
 # pexpecter
 
 Wraps a rule system around python's pexpect module,
@@ -9,9 +12,6 @@ or varying versions (e.g. MPI, PBS) reordered questions, and such.
 
 And yes, is mostly just a slightly simpler to use variant of handing a list to expect(),
 and aims to wrap some common boilerplate-ish code too.
-
-
-(currently rewriting for more general use, hang on)
 
 
 This was written for a few different pieces of software that either only work in a question-answer style,
