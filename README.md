@@ -38,7 +38,7 @@ rules = [
     ['use_insecure_cipher>',         'true'],
     ['disable_hashcheck>',           ''],
     ['Edit advanced config[^>]+>',   'n'],
-    ['Yes this is OK',               ('y', ('sleep',0.2), None) ]  # sleep is probably not necessary, but can't hurt.
+    ['Yes this is OK',               ('y', ('sleep',0.5), None) ]  
 ]
 
 proc = pexpect.spawn('rclone config')
@@ -57,6 +57,9 @@ And if the questions do change a little, then the list-and-index variant of pexp
 The first and last rules demonstrates how you sometimes need to write rules based on trial and error:
 - The first because the wording in the first summary you get, and its prompt, depends on whether there were remotes already defined or not.
 - The last could probably be "y/e/d>", but I'd have to know it always says that, and nothing else does. The string used here is probably more unique.
+
+That last sleep is there to make sure we don't kill the process  before it's written the config. This may not be necessary.
+It also feels pretty fragile - the better fix would be to detect the next prompt before exiting -- which currently easy.
 
 
 ### ctffind example
