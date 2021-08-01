@@ -23,7 +23,5 @@ rules = [
 
 proc = pexpect.spawn('rclone config')
 retval = helpers_pexpect.interact_rules( proc, rules, timeout=5, debug=1 )
-#print( 'retval: %s'%retval )
-# if we can assume there is a rule that means that function only returns once we're done, we need no more handling than:
-proc.close()
+proc.close() # if we can assume there is a rule that means that function only returns once we're done, this is all the cleanup we need
 
