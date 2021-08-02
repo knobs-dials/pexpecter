@@ -47,7 +47,7 @@ helpers_pexpect.interact_rules( proc, rules )
 proc.close()
 ```
 
-The above "make an rclone config" example works, but is actually an example of when you probably do _NOT_ want this module.
+The above "make an rclone config" example works, but is **actually an example of when you probably do _NOT_ want this module**.
 
 For starters, rclone offsers a parameter-based way to do it, which is more controlled and less fragile.
 
