@@ -72,7 +72,7 @@ Rules are
         ['Output diagnostic filename[^:]*:',            diagbase  ],
         ['Output diagnostic image file name[^:]*:',     diagbase  ], # v4.1
 
-        ['Pixel size[\s0-9.,\x1b\[\]m]+:',            '%f'%pixelsize_A],  # written that way to not match the "Pixel size for fitting" in the pre-calculation or post-calculation summary
+        ['Pixel size[\s0-9.,\x1b\[\]m]+:',              '%f'%pixelsize_A],  # should avoid matching the "Pixel size for fitting" in the pre-calculation or post-calculation summary
         ['Acceleration voltage[^:]*:',                  '%.1f'%acc_kV],
         ['Spherical aberration[^:]*:',                  '%f'%sphericalaberration],
         ['Amplitude contrast[^:]*:',                    '%f'%amplitudecontrast_frac],
@@ -90,19 +90,19 @@ Rules are
         ['Do you expect very large astigmatism[^:]*:',    'yes'], # v4.1. apparently >1000A is considered very large.
         ['Use a restraint on astigmatism?[^:]*:',         'yes'], # v4.1. Penalise above given value
 
-        ['Expected \(tolerated\) astigmatism[^:]*:',   '%f'%astigpenaltyover_A], # v4.1
+        ['Expected \(tolerated\) astigmatism[^:]*:',    '%f'%astigpenaltyover_A], # v4.1
 
-        ['Do you want to set expert options[^:]*:',   'no'], # v4.1. HAven't checked which they are yet
+        ['Do you want to set expert options[^:]*:',     'no'], # v4.1. HAven't checked which they are yet
 
-        ['Find additional phase shift[^:]*:',        phaseshift_yesno],
+        ['Find additional phase shift[^:]*:',           phaseshift_yesno],
         # only get asked if you answer yes to phase shift:
-        ['Minimum phase shift[^:]*:',                '%.2f'%phaseshift_minrad],
-        ['Maximum phase shift[^:]*:',                '%.2f'%phaseshift_maxrad],
-        ['Phase shift search step[^:]*:',            '%f'%phaseshift_steprad],
+        ['Minimum phase shift[^:]*:',                   '%.2f'%phaseshift_minrad],
+        ['Maximum phase shift[^:]*:',                   '%.2f'%phaseshift_maxrad],
+        ['Phase shift search step[^:]*:',               '%f'%phaseshift_steprad],
 
-        ['more exhaustive search',                   'no'],
+        ['more exhaustive search',                      'no'],
 
-        ['Summary information',                     None], # it's starting -- give back control
+        ['Summary information',                         None], # it's starting -- give back control
     ]
 ```
 
