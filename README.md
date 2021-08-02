@@ -108,11 +108,11 @@ Rules are
 
 The ctffind example makes more sense as an example, in that 
 - some questions only conditionally appear (phase shift search details, when you look for phase shift at all)
-- the wording in some questions changed, so this supports multiple versions.
-- there is a parameter style, but some experimental/beta features were only in the question style
-- it demonstrates a "hand back control early" rule, plus how you might wait for it instead.
-  - Which this particular code doesn't really use that, but in general you might find uses for such non-blocking behaviour.
-  - it would be simpler to comment out the last rule -- the function will then stay in control until it sees EOF.
+- ctffind does have a parameter style, but some experimental/beta features were only in the question style
+  - the wording in ctffind versions changed a little, so this supports multiple versions
+- it demonstrates a "hand back control early" rule, plus how you might then wait for it (see full example).
+  - Which this particular code doesn't need, but in general you might find uses for such non-blocking behaviour.
+  - note that it would be simpler to comment out the last rule -- the function will then stay in control until it sees EOF.
 
 I used this example in real software, and it works, but you'ld have to download ![ctffind](https://grigoriefflab.umassmed.edu/ctf_estimation_ctffind_ctftilt) and some example data (say, take one .mrc file from ![EMPIAR-10519](https://empiar.pdbj.org/entry/10519/)) to actually see it work.
 And do some reading up to understand what this electron microscopy tool is even calculating. I'm guessing you don't particularly care.
