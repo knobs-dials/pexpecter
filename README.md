@@ -54,7 +54,7 @@ For starters, rclone offsers a parameter-based way to do it, which is more contr
 Also, that list of rules is just the questions one by one in order, so doesn't do anything more than a series of expect()s and sendline()s.
 And if the questions do change a little, then the list-and-index variant of pexpect would still do, and this module adds little.
 
-The first and last rules demonstrates how you sometimes need to write rules based on trial and error:
+The first and last rules demonstrate how you sometimes need to write rules based on trial and error, and sometimes awkwardly:
 - The first because the wording in the first summary you get, and its prompt, depends on whether there were remotes already defined or not.
 - The last could probably be "y/e/d>", but I'd have to know it always says that, and nothing else does. The string used here is probably more unique.
 
