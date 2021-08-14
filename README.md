@@ -61,6 +61,8 @@ The first and last rules demonstrate how you sometimes need to write rules based
 That last sleep is there to make sure we don't kill the process  before it's written the config. This may not be necessary.
 It also feels pretty fragile - the better fix would be to detect the next prompt before exiting, which is currently not easy because there's no state.
 
+(also, you may want a delay on password entry due to terminal noecho sometimes taking a little time, but that's true for any automation)
+
 
 ### ctffind example
 
