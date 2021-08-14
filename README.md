@@ -31,7 +31,7 @@ rules = [
     ["port>",                        '22'],
     ["user>",                        'myuser'],
     ['SSH password, leave',          'y'],
-    ['password:',                    'hackme'], # will also match the confirm. Would be more readable to 
+    ['password:',                    'hackme'], # will also match the confirm. Would be more readable to separate that out
     ['key_file>',                    ''],
     ['Only PEM encrypted key[^>]+>', 'n'],
     ['key_use_agent>',               ''],
