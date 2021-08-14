@@ -52,14 +52,14 @@ The above "make an rclone config" example works, but is **actually an example of
 For starters, rclone offsers a parameter-based way to do it, which is more controlled and less fragile.
 
 Also, that list of rules is just the questions one by one in order, so doesn't do anything more than a series of expect()s and sendline()s.
-And if the questions do change a little, then the list-and-index variant of pexpect would still do, and this module adds little.
+And if the questions do change a little, then the list-and-index variant of pexpect would still do fine, and this module adds little beyond readability.
 
 The first and last rules demonstrate how you sometimes need to write rules based on trial and error, and sometimes awkwardly:
-- The first because the wording in the first summary you get, and its prompt, depends on whether there were remotes already defined or not.
-- The last could probably be "y/e/d>", but I'd have to know it always says that, and nothing else does. The string used here is probably more unique.
+- The first rule because the wording in the first summary you get, and its prompt depends on whether there were remotes already defined or not.
+- The last rule could probably be "y/e/d>", but I'd have to know it always says that, and that nothing else does. The string used here is probably more unique.
 
 That last sleep is there to make sure we don't kill the process  before it's written the config. This may not be necessary.
-It also feels pretty fragile - the better fix would be to detect the next prompt before exiting -- which currently easy.
+It also feels pretty fragile - the better fix would be to detect the next prompt before exiting, which is currently not easy because there's no state.
 
 
 ### ctffind example
@@ -154,16 +154,16 @@ The rule_list argument on interact_rules is a set of tuples.
   to make you think about what you're doing.  Keep thinking.
 
 
-## TODO:
+## TODO / CONSIDER: 
+- wrap some common boilerplate-ish code, e.g.
+  - our own spawn wrapper, so that we can e.g. allow matching on stderr output.  This seems to have a good idea: https://stackoverflow.com/questions/27179383/extracting-stderr-from-pexpect
+
+- special-cased exit for "nothing matches"?
+
 - test the "remove rule" thing.
   I've rarely used this construction, so I'm not 100% on whether it still works as expected.
   The idea was that if everything should be answered once, rules can remove themselves to avoid accidentally matching something later.
 
-- special-cased exit for "nothing matches"?
-
-- I also intend to wrap some common boilerplate-ish code, e.g.
-  - our own spawn wrapper, so that we can e.g. allow matching on stderr output.  This seems to have a good idea: https://stackoverflow.com/questions/27179383/extracting-stderr-from-pexpect
-
 - read up on more peculiarities, like 
-  https://helpful.knobs-dials.com/index.php/Pexpect#pexpect
   https://pexpect.readthedocs.io/en/stable/commonissues.html
+  https://helpful.knobs-dials.com/index.php/Pexpect#pexpect
