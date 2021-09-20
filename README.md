@@ -112,7 +112,7 @@ Rules are
 The ctffind example makes more sense as an example, in that 
 - some questions only conditionally appear (phase shift search details, when you look for phase shift at all)
 - ctffind does have a parameter style, but some experimental/beta features were only in the question style
-  - the wording in ctffind versions changed a little, so this supports multiple versions
+- the wording in ctffind versions changed a little, so this supports multiple versions
 - it demonstrates a "hand back control early" rule, plus how you might then wait for it (see full example).
   - Which this particular code doesn't need, but in general you might find uses for such non-blocking behaviour.
   - note that it would be simpler to comment out the last rule -- the function will then stay in control until it sees EOF.
