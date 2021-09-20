@@ -145,9 +145,9 @@ The rule_list argument on interact_rules is a set of tuples.
 
 ## Limitations
 
-- Question-answer interfaces are more likely to change than CLI parameters do.  Which is why you'ld typically prefer those.
-  I would recommend only using this if you need it, 
-  and ideally also control the versions of the command you're running this on.
+- You would generally prefer CLI parameters as they are less likely to change than question-answer interfaces.
+  I would recommend only using this if you have no other choice, 
+  and ideally you want to also control the versions of the command you're running rules on.
 
 - the more questions there are, the more likely it is that a rule matches something you didn't think about.
   Make rules as specific as possible, and think about how you would break this intentionally.
