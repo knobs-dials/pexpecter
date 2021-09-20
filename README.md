@@ -47,7 +47,7 @@ helpers_pexpect.interact_rules( proc, rules )
 proc.close()
 ```
 
-The above "make an rclone config" example works, but is **actually an example of when you probably do _NOT_ want this module**.
+The above "make an rclone config" example works, but is **actually an example of when you probably do _NOT_ want this module**:
 
 For starters, rclone offsers a parameter-based way to do it, which is more controlled and less fragile.
 
@@ -57,6 +57,7 @@ And if the questions do change a little, then the list-and-index variant of pexp
 The first and last rules demonstrate how you sometimes need to write rules based on trial and error, and sometimes awkwardly:
 - The first rule because the wording in the first summary you get, and its prompt depends on whether there were remotes already defined or not.
 - The last rule could probably be "y/e/d>", but I'd have to know it always says that, and that nothing else does. The string used here is probably more unique.
+and note that you wouldn't have this issue with a series of expect()s and sendline()s
 
 That last sleep is there to make sure we don't kill the process  before it's written the config. This may not be necessary.
 It also feels pretty fragile - the better fix would be to detect the next prompt before exiting, which is currently not easy because there's no state.
