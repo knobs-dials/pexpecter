@@ -51,12 +51,19 @@ This works, but is **a good example of when you probably do _NOT_ want this modu
 
 For a good part because rclone offers a parameter-based way to do it, which is more controlled, the parameters are probably more stable, and is easier to test for failure.
 
-But also, these rules are basically the questions one by one in order, so doesn't do anything more than a series of expect()s and sendline()s.
+But also, these rules are basically the questions one by one in order, so isn't any more functional nor much shorter than the list form of pexpect
 
-In fact, this is potentially more fragile. Consider the first and last rules:
-- The first rule because the wording of the first summary you get, and its prompt, both depend on whether there were remotes already defined or not. That requires some trial and error to figure out.
-- The last rule could probably be "y/e/d>", but I'd have to know it always says that (more trial and error) _and_ that nothing else does. The string used here is _probably_ more unique.
-...both these issues might be easier to resolve with a series of expect()s and sendline()s, because you know where in the sequence you are. And sometimes you can build something more like a state engine.
+    index = p.expect([pexpect.EOF, pexpect.TIMEOUT, 'No remotes', 'Current remotes','Name>', 'Storage>', 'and so on'])
+
+...or even a series of expect()s and sendline()s.
+
+
+In fact, this is potentially more fragile than that. Consider the first and last rules:
+- The first rule because the wording of the first summary you get, and its prompt, both depend on whether there were remotes already defined or not. That requires some trial and error to figure out. This is not something you want in an interface, and you only want to deal with such issues if you have no other options.
+- The last rule could probably be "y/e/d>", but I'd have to know it always says that (more trial and error) _and_ that nothing else does. The string used here is _probably_ more unique, but I don't actually know.
+
+...both these issues might be easier to resolve with a series of expect()s and sendline()s, because you implicitly have the state of know where in the sequence you are.
+And sometimes you can build something more like a state machine.
 
 
 That last sleep is there to make sure we don't kill the process  before it's written the config. This may not be necessary.
@@ -108,22 +115,22 @@ It also feels pretty fragile - the better fix would be to detect the next prompt
     ]
 ```
 
-The ctffind example makes more sense as an example, in that 
-- questions are worded quite uniquely
-- some questions only conditionally appear (phase shift search details, when you look for phase shift at all), meaning this unifies distinct uses
-- the wording in ctffind versions changed a little, meaning this more easily supports multiple versions
+This one makes more sense as an example, in that 
+- while ctffind does have a parameter style, some experimental features were only in the question style
+- questions are worded quite uniquely (the wording in ctffind versions changed a little, but the unique wording still makes it easy to easily supports multiple versions)
+- some questions only conditionally appear (phase shift details, only when you look for phase shift at all), meaning this unifies a few distinct interchanges
 - it demonstrates a "hand back control early" rule, plus how you might then wait for it (see full example).
   - Which this particular code doesn't need, but in general you might find uses for such non-blocking behaviour.
   - note that it would be simpler to comment out the last rule -- the function will then stay in control until it sees EOF.
-- (and yes, ctffind does have a parameter style, but some experimental/beta features were only in the question style)
 
-I used this example in real software.  It's not easy to test, as you'ld have to download ![ctffind](https://grigoriefflab.umassmed.edu/ctf_estimation_ctffind_ctftilt) and some example data (say, take one .mrc file from ![EMPIAR-10519](https://empiar.pdbj.org/entry/10519/)) to actually see it work. And do some reading up to understand what this electron microscopy tool is even calculating. I'm guessing you don't particularly care.
+I used this example in real software.  It's not easy for you to test, as you'ld have to download ![ctffind](https://grigoriefflab.umassmed.edu/ctf_estimation_ctffind_ctftilt) and some example data (say, take one .mrc file from ![EMPIAR-10519](https://empiar.pdbj.org/entry/10519/)) to actually see it work. And do some reading up to understand what this electron microscopy tool is even calculating. I'm guessing you don't particularly care.
 
 
 ## Rule format
 
 The rule_list argument on interact_rules is a set of tuples. 
-- The first part is a regex to match
+- The first part is a regex to match (which can often be a plain string)
+
 - If the second is
     - a string, it is sent as-is
 
