@@ -58,9 +58,9 @@ But also, these rules are basically the questions one by one in order, so isn't 
 ...or even a series of expect()s and sendline()s.
 
 
-In fact, this is potentially more fragile than that. Consider the first and last rules:
-- The first rule because the wording of the first summary you get, and its prompt, both depend on whether there were remotes already defined or not. That requires some trial and error to figure out. This is not something you want in an interface, and you only want to deal with such issues if you have no other options.
-- The last rule could probably be "y/e/d>", but I'd have to know it always says that (more trial and error) _and_ that nothing else does. The string used here is _probably_ more unique, but I don't actually know.
+In fact, the rule form is potentially more fragile than that, because it's less of a state machine. Consider the first and last rules:
+- The first rule because the wording of the first summary you get, and its prompt, both depend on whether there were remotes already defined or not. That requires some trial and error to figure out. This is not something you want in an interface.
+- The last rule could probably be "y/e/d>", but I'd have to know it always says that (more trial and error) _and_ that nothing else says that. The string used here is _probably_ more unique, but I don't actually know.
 
 ...both these issues might be easier to resolve with a series of expect()s and sendline()s, because you implicitly have the state of know where in the sequence you are.
 And sometimes you can build something more like a state machine.
